@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'colorfield',
-    #'django_filters',
+    'django_filters',
     'api',
     'users',
     'recipes',
@@ -132,6 +132,9 @@ USE_L10N = True
 USE_TZ = True
 
 REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': [
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.AllowAny',
     ],

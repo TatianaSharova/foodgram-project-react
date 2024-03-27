@@ -84,14 +84,14 @@ class FollowListSerializer(serializers.Serializer):
 
 class FollowSerializer(serializers.ModelSerializer):
     '''Serializer для оформления подписки.'''
-    email = serializers.ReadOnlyField(source='author.email')
-    id = serializers.ReadOnlyField(source='author.id')
-    username = serializers.ReadOnlyField(source='author.username')
-    first_name = serializers.ReadOnlyField(source='author.first_name')
-    last_name = serializers.ReadOnlyField(source='author.last_name')
+    email = serializers.ReadOnlyField(source='following.email')
+    id = serializers.ReadOnlyField(source='following.id')
+    username = serializers.ReadOnlyField(source='following.username')
+    first_name = serializers.ReadOnlyField(source='following.first_name')
+    last_name = serializers.ReadOnlyField(source='following.last_name')
     is_subscribed = serializers.SerializerMethodField()
     recipes = serializers.SerializerMethodField()
-    recipes_count = serializers.ReadOnlyField(source='author.recipes.count')
+    recipes_count = serializers.ReadOnlyField(source='following.recipes.count')
 
     class Meta:
         model = Follow
@@ -125,7 +125,6 @@ class FollowSerializer(serializers.ModelSerializer):
         raise serializers.ValidationError(
             'Нельзя подписаться на себя!'
         )
-
 
     def get_recipes(self, obj):
         '''Получаем рецепты автора.'''

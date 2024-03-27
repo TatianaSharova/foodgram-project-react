@@ -144,7 +144,7 @@ class Follow(models.Model):
         help_text='Текущий пользователь')
     following = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='following',
-        help_text='подписаться на этого пользователя')
+        help_text='Подписаться на этого пользователя')
 
     class Meta:
         constraints = [
