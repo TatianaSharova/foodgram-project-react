@@ -16,14 +16,14 @@ class User(AbstractUser):
     password = None
     first_name = models.CharField('first name', max_length=150, blank=False)
     last_name = models.CharField('last name', max_length=150, blank=False)
+    email = models.EmailField('E-mail', max_length=254, blank=False, unique=True)
     role = models.CharField(
         choices=ROLE_CHOICES, default=ROLE_USER,
-        max_length=6)
-    email = models.EmailField('E-mail', blank=False)
+        max_length=9)
 
     class Meta:
         ordering = ('id',)
-
+    
     @property
     def is_admin(self):
         return self.role == self.ROLE_ADMIN
