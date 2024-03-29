@@ -2,8 +2,11 @@ from django.db import models
 from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
+from .validators import validate_color
 
 User = get_user_model()
+
+MINIMUM = 1
 
 
 class Tag(models.Model):
@@ -13,7 +16,7 @@ class Tag(models.Model):
         unique=True
     )
     color = ColorField(
-        format='hexa',
+        format='hex',
         unique=True,
         max_length=7,
         verbose_name='Цвет в HEX'
@@ -21,7 +24,10 @@ class Tag(models.Model):
     slug = models.SlugField(
         max_length=200,
         unique=True,
-        verbose_name='Слаг'
+        verbose_name='Слаг',
+        validators=[
+            validate_color,
+        ]
     )
 
     class Meta:
@@ -60,27 +66,25 @@ class Recipe(models.Model):
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        verbose_name='Автор рецепта'
+        verbose_name='Автор рецепта',
+        related_name='recipes',
     )
     image = models.ImageField(
-        upload_to='recepies/images/',
-        null=True,
-        default=None
+        upload_to='recipes/images/'
     )
     text = models.TextField(
-        verbose_name='Описание',
-        blank=True,
-        null=True
+        verbose_name='Описание'
     )
     cooking_time = models.PositiveSmallIntegerField(
         verbose_name='Время приготовления в минутах',
         validators=[MinValueValidator(
-            1, 'Время приготовления не может быть меньше 1 минуты!'
+            MINIMUM, 'Время приготовления не может быть меньше 1 минуты!'
         )],
     )
     ingredients = models.ManyToManyField(
         Ingredient,
-        through='IngredientRecipe')
+        through='IngredientRecipe',
+        related_name='recipes')
     tags = models.ManyToManyField(
         Tag,
         through='TagRecipe')
@@ -103,7 +107,7 @@ class TagRecipe(models.Model):
     tag = models.ForeignKey(
         Tag,
         on_delete=models.CASCADE,
-        verbose_name='Тэг')
+        verbose_name='Тэг',)
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
@@ -114,13 +118,16 @@ class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(
         Ingredient,
         on_delete=models.CASCADE,
-        verbose_name='Ингридиент')
+        verbose_name='Ингредиент')
     recipe = models.ForeignKey(
         Recipe,
         on_delete=models.CASCADE,
         verbose_name='Рецепт')
     amount = models.PositiveSmallIntegerField(
-        verbose_name='Количество'
+        verbose_name='Количество',
+        validators=[MinValueValidator(
+            MINIMUM, 'Количество не может быть меньше 1!'
+        )]
     )
 
     class Meta:
@@ -147,6 +154,9 @@ class Follow(models.Model):
         help_text='Подписаться на этого пользователя')
 
     class Meta:
+        ordering = ('id',)
+        verbose_name = 'Подписка'
+        verbose_name_plural = 'Подписки'
         constraints = [
             models.UniqueConstraint(
                 fields=['user', 'following'],

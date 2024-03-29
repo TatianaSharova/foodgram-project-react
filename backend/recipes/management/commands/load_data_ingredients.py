@@ -3,7 +3,7 @@ from csv import DictReader
 from django.core.management import BaseCommand
 
 # Import the model
-from recipes.models import Ingredients
+from recipes.models import Ingredient
 
 ALREDY_LOADED_ERROR_MESSAGE = """
 If you need to reload the child data from the CSV file,
@@ -17,13 +17,13 @@ class Command(BaseCommand):
     help = "Loads data from category.csv"
 
     def handle(self, *args, **options):
-        if Ingredients.objects.exists():
+        if Ingredient.objects.exists():
             print('category data already loaded...exiting.')
             print(ALREDY_LOADED_ERROR_MESSAGE)
             return
         print("Loading category data")
         for row in DictReader(open('./ingredients.csv', encoding='utf-8')):
-            ingredient = Ingredients(
+            ingredient = Ingredient(
                 name=row['name'],
-                measure=row['measure'])
+                measurement_unit=row['measurement_unit'])
             ingredient.save()
