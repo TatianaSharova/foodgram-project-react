@@ -3,7 +3,7 @@ from django.db import models
 
 
 class User(AbstractUser):
-    """Класс переопределения базового user."""
+    '''Класс переопределения базового user.'''
 
     password = models.CharField('password', max_length=150, default=None)
     first_name = models.CharField('first name', max_length=150)
