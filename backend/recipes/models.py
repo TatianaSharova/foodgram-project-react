@@ -75,11 +75,8 @@ class Recipe(models.Model):
     text = models.TextField(
         verbose_name='Описание'
     )
-    cooking_time = models.PositiveSmallIntegerField(
-        verbose_name='Время приготовления в минутах',
-        validators=[MinValueValidator(
-            MINIMUM, 'Время приготовления не может быть меньше 1 минуты!'
-        )],
+    cooking_time = models.IntegerField(
+        verbose_name='Время приготовления в минутах'
     )
     ingredients = models.ManyToManyField(
         Ingredient,
@@ -94,10 +91,10 @@ class Recipe(models.Model):
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
         ordering = ('-pub_date',)
-        constraints = [
-            models.UniqueConstraint(
-                fields=['name', 'author'],
-                name='unique_name_recipe')]
+        #constraints = [
+        #    models.UniqueConstraint(
+        #        fields=['name', 'author'],
+        #        name='unique_name_recipe')]
     
     def __str__(self):
         return self.name
@@ -123,11 +120,8 @@ class IngredientRecipe(models.Model):
         Recipe,
         on_delete=models.CASCADE,
         verbose_name='Рецепт')
-    amount = models.PositiveSmallIntegerField(
-        verbose_name='Количество',
-        validators=[MinValueValidator(
-            MINIMUM, 'Количество не может быть меньше 1!'
-        )]
+    amount = models.IntegerField(
+        verbose_name='Количество'
     )
 
     class Meta:

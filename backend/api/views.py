@@ -1,4 +1,5 @@
 from rest_framework import mixins, viewsets
+from rest_framework import exceptions
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import (IsAuthenticated,
                                         AllowAny)
@@ -47,7 +48,7 @@ class IngredientViewSet(mixins.ListModelMixin,
     search_fields = ('^name',)
     pagination_class = None
 
-                
+
 class RecipeViewSet(viewsets.ModelViewSet):
     queryset = Recipe.objects.all()
     permission_classes = (IsAuthorOrAdminOrReadOnly, )
@@ -59,21 +60,26 @@ class RecipeViewSet(viewsets.ModelViewSet):
         if self.request.method in permissions.SAFE_METHODS:
             return RecipeListSerializer
         return RecipeCreateSerializer
-
-    @action(detail=True, methods=['post', 'delete'],
-            permission_classes=(IsAuthenticated,))
+    
+    
+    @action(detail=True,
+            methods=['post', 'delete'],
+            permission_classes=[IsAuthenticated])
     def favorite(self, request, *args, **kwargs):
-        '''Добавляем или удаляем рецепт из избранного.'''
+        """
+        Получить / Добавить / Удалить  рецепт
+        из избранного у текущего пользоватля.
+        """
         try:
             recipe = Recipe.objects.get(id=self.kwargs.get('pk'))
         except Recipe.DoesNotExist:
-            return Response({'errors': 'Рецепт не найден!'},
-                                status=HTTPStatus.BAD_REQUEST)
+            return Response({'errors': 'Объект не найден'},
+                            status=HTTPStatus.BAD_REQUEST)
         user = self.request.user
         if request.method == 'POST':
             if Favorite.objects.filter(author=user,
                                        recipe=recipe).exists():
-                return Response({'errors': 'Рецепт уже добавлен в избранное.'},
+                return Response({'errors': 'Рецепт уже добавлен!'},
                                 status=HTTPStatus.BAD_REQUEST)
             serializer = FavoriteSerializer(data=request.data)
             if serializer.is_valid(raise_exception=True):
@@ -82,28 +88,30 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                 status=HTTPStatus.CREATED)
             return Response(serializer.errors,
                             status=HTTPStatus.BAD_REQUEST)
-        if request.method == 'DELETE':
-            if not Favorite.objects.filter(author=user,
+        if not Favorite.objects.filter(author=user,
                                        recipe=recipe).exists():
-                return Response({'errors': 'Объект не найден'},
-                            status=HTTPStatus.NOT_FOUND)
-            Favorite.objects.get(recipe=recipe).delete()
-            return Response('Рецепт удалён из избранного.',
-                            status=HTTPStatus.NO_CONTENT)
+            return Response({'errors': 'Объект не найден'},
+                            status=HTTPStatus.BAD_REQUEST)
+        Favorite.objects.filter(author=user,recipe=recipe).delete()
+        return Response('Рецепт успешно удалён из избранного.',
+                        status=HTTPStatus.NO_CONTENT)
 
-    @action(detail=True, methods=['post', 'delete'],
-            permission_classes=(IsAuthenticated,))
+    @action(detail=True,
+            methods=['post', 'delete'],
+            permission_classes=[IsAuthenticated])
     def shopping_cart(self, request, **kwargs):
-        '''Добавляем или удаляем рецепт из списка покупок.'''
+        """
+        Получить / Добавить / Удалить  рецепт
+        из списка покупок у текущего пользоватля.
+        """
         try:
             recipe = Recipe.objects.get(id=self.kwargs.get('pk'))
         except Recipe.DoesNotExist:
-            return Response({'errors': 'Рецепт не найден!'},
-                                status=HTTPStatus.BAD_REQUEST)
+            return Response({'errors': 'Объект не найден'},
+                            status=HTTPStatus.BAD_REQUEST)
         user = self.request.user
         if request.method == 'POST':
-            if Cart.objects.filter(author=user,
-                                           recipe=recipe).exists():
+            if Cart.objects.filter(author=user,recipe=recipe).exists():
                 return Response({'errors': 'Рецепт уже добавлен!'},
                                 status=HTTPStatus.BAD_REQUEST)
             serializer = CartSerializer(data=request.data)
@@ -113,13 +121,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
                                 status=HTTPStatus.CREATED)
             return Response(serializer.errors,
                             status=HTTPStatus.BAD_REQUEST)
-        if request.method == 'DELETE':
-            if not Cart.objects.filter(author=user,
-                                       recipe=recipe).exists():
-                return Response({'errors': 'Рецепт не найден.'},
-                                status=HTTPStatus.NOT_FOUND)
-            Cart.objects.get(recipe=recipe).delete()
-            return Response('Рецепт удалён из списка покупок.',
+        if not Cart.objects.filter(author=user, recipe=recipe).exists():
+            return Response({'errors': 'Объект не найден'},
+                            status=HTTPStatus.BAD_REQUEST)
+        Cart.objects.filter(author=user,recipe=recipe).delete()
+        return Response('Рецепт успешно удалён из списка покупок.',
                         status=HTTPStatus.NO_CONTENT)
 
     @action(detail=False, methods=['get'])

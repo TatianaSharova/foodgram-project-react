@@ -28,9 +28,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-dy0@f7+c(6l&(ht09yyneadv7dexkgpx#@ba8$y72js4$kzav)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-dy0@f7+c(6l&(ht09yyneadv7dexkgpx#@ba8$y72js4$kzav)')
 
-ALLOWED_HOSTS = []
+DEBUG = os.getenv('DEBUG_STATUS', 'False').lower() < os.getenv('DEBUG_STATUS', 'False')
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='127.0.0.1, localhost').split(',')
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost' ]
 
 
 # Application definition
@@ -86,23 +89,24 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-#DATABASES = {
-#    'default': {
-#        'ENGINE': 'django.db.backends.postgresql',
-#        'NAME': os.getenv('POSTGRES_DB', 'django'),
-#        'USER': os.getenv('POSTGRES_USER', 'django'),
-#        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
-#        #'HOST': os.getenv('DB_HOST', ''),
-#        'HOST': ('localhost'),
-#        'PORT': os.getenv('DB_PORT', 5432)
-#    }
-#}
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'django'),
+        'USER': os.getenv('POSTGRES_USER', 'django'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', ''),
+        'HOST': os.getenv('DB_HOST', ''),
+        'PORT': os.getenv('DB_PORT', 5432)
     }
 }
+
+# default local database
+
+#DATABASES = {
+#    'default': {
+#        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+#        'NAME': 'db.sqlite3', }}
+
 
 
 # Password validation
@@ -173,7 +177,17 @@ DJOSER = {
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+
+
+#STATICFILES_DIRS = (os.path.join(BASE_DIR, 'data'),)
+
 STATIC_URL = '/static/'
+
+STATIC_ROOT = BASE_DIR / 'collected_static'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = '/app/media/'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
