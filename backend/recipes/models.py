@@ -104,6 +104,9 @@ class TagRecipe(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Рецепт')
 
+    class Meta:
+        ordering = ('id',)
+
 
 class IngredientRecipe(models.Model):
     ingredient = models.ForeignKey(
@@ -197,6 +200,7 @@ class Favorite(models.Model):
     class Meta:
         ordering = ('id',)
         verbose_name = 'Избранные рецепты'
+        default_related_name = 'favorites'
         constraints = [
             models.UniqueConstraint(
                 fields=['recipe', 'author'],
