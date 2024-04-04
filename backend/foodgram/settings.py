@@ -26,14 +26,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: don't run with debug turned on in production!
 
-# SECRET_KEY = os.getenv('SECRET_KEY', default='token')
-SECRET_KEY = 'django-insecure-dy0@f7+c(6l&(ht09yyneadv7dexkgpx#@ba8$y72js4$kzav)'
+SECRET_KEY = os.getenv('SECRET_KEY', default='token')
+#SECRET_KEY = 'django-insecure-dy0@f7+c(6l&(ht09yyneadv7dexkgpx#@ba8$y72js4$kzav)'
 
-# DEBUG = os.getenv('DEBUG_STATUS', 'False').lower() < os.getenv('DEBUG_STATUS', 'False')
-DEBUG = True
+DEBUG = os.getenv('DEBUG_STATUS', 'False').lower() > os.getenv('DEBUG_STATUS', 'False')
+#DEBUG = True
 
-# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='127.0.0.1, localhost').split(',')
-ALLOWED_HOSTS = ['foodgram-study.ddns.net', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='127.0.0.1, localhost').split(',')
+# ALLOWED_HOSTS = ['foodgram-study.ddns.net', '127.0.0.1', 'localhost']
 
 
 # Application definition
