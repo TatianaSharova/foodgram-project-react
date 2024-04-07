@@ -48,8 +48,8 @@ class Ingredient(models.Model):
         verbose_name='Единица измерения')
 
     class Meta:
-        verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Ингридиенты'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Ингредиенты'
         ordering = ('id',)
 
     def __str__(self):
@@ -177,6 +177,7 @@ class Cart(models.Model):
     class Meta:
         ordering = ('id',)
         verbose_name = 'Список покупок'
+        verbose_name_plural = 'Список покупок'
         constraints = [
             models.UniqueConstraint(
                 fields=['recipe', 'author'],
@@ -200,6 +201,7 @@ class Favorite(models.Model):
     class Meta:
         ordering = ('id',)
         verbose_name = 'Избранные рецепты'
+        verbose_name_plural = 'Избранные рецепты'
         default_related_name = 'favorites'
         constraints = [
             models.UniqueConstraint(
