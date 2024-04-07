@@ -4,6 +4,7 @@ volumes:
   pg_data:
   static:
   media:
+  redoc:
 
 services:
   db:
@@ -15,26 +16,27 @@ services:
     image: tatianasharova/foodgram_backend
     env_file: .env
     volumes:
-      - static:/app/static/
+      - static:/backend_static/
       - media:/app/media/
-      - ./docs/:/usr/share/nginx/html/api/docs/
+      - redoc:/app/docs/
     depends_on:
       - db
   frontend:
     image: tatianasharova/foodgram_frontend
     env_file: .env
+    command: cp -r /app/build/. /result_build/
     volumes:
-      - ./frontend/:/app/result_build/
+      - static:/result_build/
     depends_on:
       - db
   gateway:
     image: tatianasharova/foodgram_gateway
     env_file: .env
     volumes:
-      - static:/var/html/static/
-      - media:/var/html/media/
+      - static:/staticfiles/
+      - media:/app/media/
       - ./docs/:/usr/share/nginx/html/api/docs/
-      - ./frontend/build:/usr/share/nginx/html/
+      - redoc:/usr/share/nginx/html/api/docs/
     ports:
       - 8888:80
     depends_on:
