@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY = os.getenv('SECRET_KEY', default='token')
 SECRET_KEY = 'django-insecure-dy0@f7+c(6l&(ht09yyneadv7dexkgpx#@ba8$y72js4$kzav)'
 
-DEBUG = os.getenv('DEBUG_STATUS', 'False').lower() > os.getenv('DEBUG_STATUS', 'False')
+# DEBUG = os.getenv('DEBUG_STATUS', 'False').lower() > os.getenv('DEBUG_STATUS', 'False')
 DEBUG = True
 
 # ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='127.0.0.1, localhost').split(',')
@@ -95,7 +95,7 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB', 'foodgram'),
         'USER': os.getenv('POSTGRES_USER', 'foodgram_user'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'foodgram_password'),
-        'HOST': os.getenv('DB_HOST', ''),
+        'HOST': os.getenv('DB_HOST', 'db'),
         'PORT': os.getenv('DB_PORT', 5432)
     }
 }
