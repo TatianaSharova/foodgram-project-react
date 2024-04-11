@@ -34,6 +34,7 @@ DEBUG = True
 
 # ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='127.0.0.1, localhost').split(',')
 ALLOWED_HOSTS = ['foodgram-study.ddns.net', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = ['foodgram-study.ddns.net', ]
 
 
 # Application definition
