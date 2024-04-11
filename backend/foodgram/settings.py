@@ -33,7 +33,7 @@ SECRET_KEY = 'django-insecure-dy0@f7+c(6l&(ht09yyneadv7dexkgpx#@ba8$y72js4$kzav)
 DEBUG = True
 
 # ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='127.0.0.1, localhost').split(',')
-ALLOWED_HOSTS = ['foodgram-study.ddns.net', '127.0.0.1', 'localhost', '158.160.27.231']
+ALLOWED_HOSTS = ['foodgram-study.ddns.net', '127.0.0.1', 'localhost', '158.160.27.231', '*']
 
 
 # Application definition
