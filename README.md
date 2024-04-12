@@ -11,7 +11,7 @@ Foodgram, «Продуктовый помощник». Онлайн-сервис
 
 **_Клонировать репозиторий:_**
 ```
-git@github.com:tatianasharova/Foodgram.git
+git@github.com:TatianaSharova/foodgram-project-react.git
 ```
 **_Установить на сервере Docker, Docker Compose:_**
 ```
@@ -20,58 +20,63 @@ curl -fsSL https://get.docker.com -o get-docker.sh      - скачать скр�
 sh get-docker.sh                                        - запуск скрипта
 sudo apt-get install docker-compose-plugin              - последняя версия docker compose
 ```
-**_Скопировать на сервер файлы docker-compose.yml, nginx.conf из папки infra (команды выполнять находясь в папке infra):_**
+**_Скопировать на сервер файлы docker-compose.production.yml(команду выполнять находясь в папке проекта):_**
 ```
-scp docker-compose.yml nginx.conf username@IP:/home/username/
+scp -i path_to_SSH/SSH_name docker-compose.production.yml username@server_ip:/home/username/foodgram/docker-compose.production.yml
 
+# SSH_name — имя файла с SSH-ключом (без расширения)
+# path_to_SSH — путь к файлу с SSH-ключом
 # username - имя пользователя на сервере
-# IP - публичный IP сервера
+# server_ip — IP вашего сервера
 ```
 
 **_Для работы с GitHub Actions необходимо в репозитории в разделе Secrets > Actions создать переменные окружения:_**
 ```
-SECRET_KEY              - секретный ключ Django проекта
 DOCKER_PASSWORD         - пароль от Docker Hub
 DOCKER_USERNAME         - логин Docker Hub
 HOST                    - публичный IP сервера
 USER                    - имя пользователя на сервере
-PASSPHRASE              - *если ssh-ключ защищен паролем
 SSH_KEY                 - приватный ssh-ключ
+SSH_PASSPHRASE          - пароль для ssh-ключа
 TELEGRAM_TO             - ID телеграм-аккаунта для посылки сообщения
 TELEGRAM_TOKEN          - токен бота, посылающего сообщение
-
-DB_ENGINE               - django.db.backends.postgresql
-DB_NAME                 - postgres
-POSTGRES_USER           - postgres
-POSTGRES_PASSWORD       - postgres
+```
+**_На сервере в папке foodgram создать файл .env и внести туда следующие данные:_**
+```
+POSTGRES_DB             - имя бд
+POSTGRES_USER           - имя пользователя бд
+POSTGRES_PASSWORD       - пароль от бд
 DB_HOST                 - db
-DB_PORT                 - 5432 (порт по умолчанию)
+DB_PORT                 - 5432
+SECRET_KEY              - ваш секретный ключ
 ```
 
 **_Создать и запустить контейнеры Docker, выполнить команду на сервере (версии команд "docker compose" или "docker-compose" отличаются в зависимости от установленной версии Docker Compose):**_
 ```
-sudo docker compose up -d
+sudo docker compose -f docker-compose.production.yml up -d
 ```
 **_Выполнить миграции:_**
 ```
-sudo docker compose exec backend python manage.py migrate
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
 ```
 **_Собрать статику:_**
 ```
-sudo docker compose exec backend python manage.py collectstatic --noinput
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
+
+sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
 ```
 **_Наполнить базу данных содержимым из файла ingredients.json:_**
 ```
-sudo docker compose exec backend python manage.py load_data_ingredients
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py load_data_ingredients
 ```
 **_Создать суперпользователя:_**
 ```
-sudo docker compose exec backend python manage.py createsuperuser
+sudo docker compose -f docker-compose.production.yml exec backend python manage.py createsuperuser
 ```
 **_Для остановки контейнеров Docker:_**
 ```
-sudo docker compose down -v      - с их удалением
-sudo docker compose stop         - без удаления
+sudo docker compose -f docker-compose.production.yml down -v      - с удалением контейнеров и томов
+sudo docker compose -f docker-compose.production.yml stop         - без удаления
 ```
 ### После каждого обновления репозитория (push в ветку master) будет происходить:
 
@@ -84,7 +89,7 @@ sudo docker compose stop         - без удаления
 
 **_Склонировать репозиторий к себе_**
 ```
-git@github.com:tatianasharova/Foodgram.git
+git@github.com:TatianaSharova/foodgram-project-react.git
 ```
 
 **_В директории проекта создать файл .env и заполнить своими данными:_**
