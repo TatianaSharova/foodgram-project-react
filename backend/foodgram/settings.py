@@ -30,8 +30,8 @@ SECRET_KEY = os.getenv('SECRET_KEY', default='token')
 
 DEBUG = os.getenv('DEBUG_STATUS', 'False').lower() < os.getenv('DEBUG_STATUS', 'False')
 
-# ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='127.0.0.1, localhost').split(',')
-ALLOWED_HOSTS = ['foodgram-study.ddns.net', '127.0.0.1', 'localhost', '158.160.27.231', '*']
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='127.0.0.1, localhost').split(',')
+# ALLOWED_HOSTS = ['foodgram-study.ddns.net', '127.0.0.1', 'localhost', '158.160.27.231', '*']
 
 
 # Application definition
