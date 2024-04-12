@@ -369,7 +369,7 @@ class FollowSerializer(serializers.ModelSerializer):
                 user=self.context['request'].user).exists():
             raise serializers.ValidationError(
                 'Вы уже подписаны на этого пользователя!'
-                )
+            )
         return data
 
     def to_representation(self, instance):
