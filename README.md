@@ -20,7 +20,7 @@ curl -fsSL https://get.docker.com -o get-docker.sh      - скачать скр�
 sh get-docker.sh                                        - запуск скрипта
 sudo apt-get install docker-compose-plugin              - последняя версия docker compose
 ```
-**_Скопировать на сервер файлы docker-compose.production.yml(команду выполнять находясь в папке проекта):_**
+**_Скопировать на сервер в папку foodgram файл docker-compose.production.yml(команду выполнять находясь в папке проекта):_**
 ```
 scp -i path_to_SSH/SSH_name docker-compose.production.yml username@server_ip:/home/username/foodgram/docker-compose.production.yml
 
@@ -50,8 +50,30 @@ DB_HOST                 - db
 DB_PORT                 - 5432
 SECRET_KEY              - ваш секретный ключ
 ```
+**_Создание Docker-образов:_**
 
-**_Создать и запустить контейнеры Docker, выполнить команду на сервере (версии команд "docker compose" или "docker-compose" отличаются в зависимости от установленной версии Docker Compose):**_
+1.  Замените username на ваш логин на DockerHub:
+
+    ```
+    Из папки frontend выполнить команду:
+    docker build -t username/foodgram_frontend .
+
+    Из папки backend выполнить команду:
+    docker build -t username/foodgram_backend .
+
+    Из папки nginx выполнить команду:
+    docker build -t username/foodgram_gateway . 
+    ```
+
+2. Загрузите образы на DockerHub:
+
+    ```
+    docker push username/foodgram_frontend
+    docker push username/foodgram_backend
+    docker push username/foodgram_gateway
+    ```
+
+**_Запустить контейнеры Docker:**_
 ```
 sudo docker compose -f docker-compose.production.yml up -d
 ```
@@ -81,7 +103,7 @@ sudo docker compose -f docker-compose.production.yml stop         - без уд�
 ### После каждого обновления репозитория (push в ветку master) будет происходить:
 
 1. Проверка кода на соответствие стандарту PEP8 (с помощью пакета flake8)
-2. Сборка и доставка докер-образов frontend и backend на Docker Hub
+2. Сборка и доставка докер-образов frontend, backend, gateway на Docker Hub
 3. Разворачивание проекта на удаленном сервере
 4. Отправка сообщения в Telegram в случае успеха
 
@@ -94,7 +116,7 @@ git@github.com:TatianaSharova/foodgram-project-react.git
 
 **_В директории проекта создать файл .env и заполнить своими данными:_**
 ```
-SECRET_KEY='your secret key'
+SECRET_KEY='ваш секретный ключ'
 ALLOWED_HOSTS='localhost'
 DEBUG_STATUS=True
 
