@@ -8,7 +8,7 @@ from djoser.views import UserViewSet
 from rest_framework import mixins, permissions, viewsets
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 
 from .filters import RecipeFilter
@@ -158,7 +158,7 @@ class CustomUserViewSet(UserViewSet):
     оформления подписок.
     '''
     queryset = User.objects.all()
-    permission_classes = (IsAuthorOrAdminOrReadOnly,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     pagination_class = LimitPagination
 
     @action(detail=False,
