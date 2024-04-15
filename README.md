@@ -23,7 +23,7 @@ curl -fsSL https://get.docker.com -o get-docker.sh      - скачать скр�
 sh get-docker.sh                                        - запуск скрипта
 sudo apt-get install docker-compose-plugin              - последняя версия docker compose
 ```
-**_Скопировать на сервер в папку foodgram файл docker-compose.production.yml(команду выполнять находясь в папке проекта):_**
+**_Скопировать на сервер в папку foodgram файл docker-compose.production.yml (команду выполнять, находясь в папке проекта):_**
 ```
 scp -i path_to_SSH/SSH_name docker-compose.production.yml username@server_ip:/home/username/foodgram/docker-compose.production.yml
 
