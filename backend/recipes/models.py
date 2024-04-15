@@ -82,6 +82,7 @@ class Recipe(models.Model):
         related_name='recipes')
     tags = models.ManyToManyField(
         Tag,
+        verbose_name='Тэги',
         through='TagRecipe')
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
