@@ -1,8 +1,11 @@
 from colorfield.fields import ColorField
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from .validators import validate_color
+
+MIN_NUM = 1
 
 User = get_user_model()
 
@@ -74,16 +77,21 @@ class Recipe(models.Model):
         verbose_name='Описание'
     )
     cooking_time = models.IntegerField(
+        validators=[
+            MinValueValidator(MIN_NUM, 'Минимальное время приготовления'),
+        ],
         verbose_name='Время приготовления в минутах'
     )
     ingredients = models.ManyToManyField(
         Ingredient,
         through='IngredientRecipe',
-        related_name='recipes')
+        related_name='recipes',
+        blank=False)
     tags = models.ManyToManyField(
         Tag,
         verbose_name='Тэги',
-        through='TagRecipe')
+        through='TagRecipe',
+        blank=False)
     pub_date = models.DateTimeField('Дата публикации', auto_now_add=True)
 
     class Meta:
@@ -119,7 +127,10 @@ class IngredientRecipe(models.Model):
         on_delete=models.CASCADE,
         verbose_name='Рецепт')
     amount = models.IntegerField(
-        verbose_name='Количество'
+        verbose_name='Количество',
+        validators=[
+            MinValueValidator(MIN_NUM, 'Минимальное количество'),
+        ],
     )
 
     class Meta:
