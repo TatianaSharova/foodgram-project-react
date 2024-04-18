@@ -1,7 +1,6 @@
 from http import HTTPStatus
 
 from django.db.models import Sum
-from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from djoser.views import UserViewSet
@@ -18,6 +17,7 @@ from .serializers import (CartSerializer, FavoriteSerializer, FollowSerializer,
                           IngredientSerializer, RecipeCreateSerializer,
                           RecipeListSerializer, TagSerializer,
                           UserInfoSerializer)
+from .utils import generate_shopping_list
 from recipes.models import (Cart, Favorite, Follow, Ingredient,
                             IngredientRecipe, Recipe, Tag, User)
 
@@ -130,25 +130,15 @@ class RecipeViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def download_shopping_cart(self, request):
         '''Скачиваем список покупок для выбранных рецептов.'''
-        ingredients = IngredientRecipe.objects.filter(
+        ingredients_list = IngredientRecipe.objects.filter(
             recipe__cart__author=self.request.user
         ).values(
             'ingredient__name', 'ingredient__measurement_unit'
         ).order_by(
             'ingredient__name'
         ).annotate(ingredient_total=Sum('amount'))
-        file_name = 'shopping_list.txt'
-        shopping_list = []
-        for item in ingredients:
-            name = item['ingredient__name']
-            measurement_unit = item['ingredient__measurement_unit']
-            amount = item['ingredient_total']
-            shopping_list.append(f'{name} - {amount} {measurement_unit}')
-        content = '\n'.join(shopping_list)
-        content_type = 'text/plain,charset=utf8'
-        response = HttpResponse(content, content_type=content_type)
-        response['Content-Disposition'] = f'attachment; filename={file_name}'
-        return response
+        list_name = 'shopping_list.txt'
+        return generate_shopping_list(list_name, ingredients_list)
 
 
 class CustomUserViewSet(UserViewSet):
