@@ -118,6 +118,12 @@ class TagRecipe(models.Model):
         ordering = ('recipe',)
         verbose_name = 'Тэг для рецепта'
         verbose_name_plural = 'Тэги для рецептов'
+        constraints = (
+            models.UniqueConstraint(
+                fields=('tag', 'recipe'),
+                name='unique_tag'
+            ),
+        )
 
     def __str__(self):
         return f'Для {self.recipe} выбран тэг: {self.tag}'
