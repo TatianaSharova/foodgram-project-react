@@ -3,15 +3,21 @@ from django.contrib import admin
 from .models import (Cart, Favorite, Follow, Ingredient, IngredientRecipe,
                      Recipe, Tag)
 
+MIN_NUM = 1
+
 
 class IngredientRecipeInline(admin.TabularInline):
     model = IngredientRecipe
-    extra = 1
+    autocomplete_fields = ('ingredient',)
+    extra = MIN_NUM
+    min_num = MIN_NUM
 
 
 class RecipeTagInLine(admin.TabularInline):
     model = Recipe.tags.through
-    extra = 1
+    autocomplete_fields = ('tag',)
+    extra = MIN_NUM
+    min_num = MIN_NUM
 
 
 @admin.register(Follow)
