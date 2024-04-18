@@ -3,27 +3,27 @@ from django.contrib.auth import get_user_model
 from django.core.validators import MinValueValidator
 from django.db import models
 
+from .constans import (HEX_LENGTH, INGREDIENT_NAME_LEN, MAX_LENGTH,
+                       MEASURE_UNIT_LEN, MIN_NUM)
 from .validators import validate_color
-
-MIN_NUM = 1
 
 User = get_user_model()
 
 
 class Tag(models.Model):
     name = models.CharField(
-        max_length=200,
+        max_length=MAX_LENGTH,
         verbose_name='Название тега',
         unique=True
     )
     color = ColorField(
         format='hex',
         unique=True,
-        max_length=7,
+        max_length=HEX_LENGTH,
         verbose_name='Цвет в HEX'
     )
     slug = models.SlugField(
-        max_length=200,
+        max_length=MAX_LENGTH,
         unique=True,
         verbose_name='Слаг',
         validators=[
@@ -34,7 +34,7 @@ class Tag(models.Model):
     class Meta:
         verbose_name = 'Тэг'
         verbose_name_plural = 'Тэги'
-        ordering = ('id',)
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -42,18 +42,18 @@ class Tag(models.Model):
 
 class Ingredient(models.Model):
     name = models.CharField(
-        max_length=64,
+        max_length=INGREDIENT_NAME_LEN,
         verbose_name='Название ингредиента',
         db_index=True
     )
     measurement_unit = models.CharField(
-        max_length=20,
+        max_length=MEASURE_UNIT_LEN,
         verbose_name='Единица измерения')
 
     class Meta:
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
-        ordering = ('id',)
+        ordering = ('name',)
 
     def __str__(self):
         return self.name
@@ -61,7 +61,7 @@ class Ingredient(models.Model):
 
 class Recipe(models.Model):
     name = models.CharField(
-        max_length=200,
+        max_length=MAX_LENGTH,
         verbose_name='Название рецепта'
     )
     author = models.ForeignKey(
@@ -71,7 +71,8 @@ class Recipe(models.Model):
         related_name='recipes',
     )
     image = models.ImageField(
-        upload_to='recipes/images/'
+        upload_to='recipes/images/',
+        verbose_name='Изображение'
     )
     text = models.TextField(
         verbose_name='Описание'
@@ -86,7 +87,8 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField(
         Ingredient,
         through='IngredientRecipe',
-        related_name='recipes')
+        related_name='recipes',
+        verbose_name='Ингредиенты')
     tags = models.ManyToManyField(
         Tag,
         verbose_name='Тэги',
@@ -113,7 +115,12 @@ class TagRecipe(models.Model):
         verbose_name='Рецепт')
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('recipe',)
+        verbose_name = 'Тэг для рецепта'
+        verbose_name_plural = 'Тэги для рецептов'
+
+    def __str__(self):
+        return f'Для {self.recipe} выбран тэг: {self.tag}'
 
 
 class IngredientRecipe(models.Model):
@@ -134,7 +141,7 @@ class IngredientRecipe(models.Model):
     )
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('recipe',)
         constraints = (
             models.UniqueConstraint(
                 fields=('ingredient', 'recipe'),
@@ -151,13 +158,15 @@ class IngredientRecipe(models.Model):
 class Follow(models.Model):
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='follower',
-        help_text='Текущий пользователь')
+        help_text='Текущий пользователь',
+        verbose_name='Подписчик')
     following = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='following',
-        help_text='Подписаться на этого пользователя')
+        help_text='Подписаться на этого пользователя',
+        verbose_name='Пользователь')
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('user',)
         verbose_name = 'Подписка'
         verbose_name_plural = 'Подписки'
         constraints = [
@@ -187,7 +196,7 @@ class Cart(models.Model):
         verbose_name='Рецепт')
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('author',)
         verbose_name = 'Список покупок'
         verbose_name_plural = 'Список покупок'
         constraints = [
@@ -211,7 +220,7 @@ class Favorite(models.Model):
         verbose_name='Рецепт')
 
     class Meta:
-        ordering = ('id',)
+        ordering = ('author',)
         verbose_name = 'Избранные рецепты'
         verbose_name_plural = 'Избранные рецепты'
         default_related_name = 'favorites'

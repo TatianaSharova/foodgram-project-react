@@ -1,9 +1,8 @@
 from django.contrib import admin
 
+from .constans import EMPTY_VALUE, MIN_NUM
 from .models import (Cart, Favorite, Follow, Ingredient, IngredientRecipe,
                      Recipe, Tag)
-
-MIN_NUM = 1
 
 
 class IngredientRecipeInline(admin.TabularInline):
@@ -24,14 +23,14 @@ class RecipeTagInLine(admin.TabularInline):
 class FollowAdmin(admin.ModelAdmin):
     list_display = ('id', 'user', 'following')
     search_fields = ('user__username', 'following__username')
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
 
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'color', 'slug')
     search_fields = ('name', 'color', 'slug')
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
 
 
 @admin.register(Recipe)
@@ -42,7 +41,7 @@ class RecipeAdmin(admin.ModelAdmin):
                     'favorites_count', 'display_ingredients')
     search_fields = ('name', 'author__username')
     list_filter = ('name', 'author', 'tags')
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
 
     @admin.display(description='Количество добавлений в избранное')
     def favorites_count(self, obj):
@@ -64,7 +63,7 @@ class IngredientAdmin(admin.ModelAdmin):
     list_display = ('id', 'name', 'measurement_unit')
     search_fields = ('name',)
     list_filter = ('name',)
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
 
 
 @admin.register(Cart)
@@ -72,7 +71,7 @@ class CartAdmin(admin.ModelAdmin):
     list_display = ('id', 'author', 'recipe')
     list_filter = ('author', 'recipe')
     search_fields = ('author', 'recipe')
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
 
 
 @admin.register(Favorite)
@@ -80,4 +79,4 @@ class FavoriteAdmin(admin.ModelAdmin):
     list_display = ('id', 'author', 'recipe')
     list_filter = ('author', 'recipe')
     search_fields = ('author',)
-    empty_value_display = '-пусто-'
+    empty_value_display = EMPTY_VALUE
