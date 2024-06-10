@@ -3,11 +3,6 @@ Foodgram, «Продуктовый помощник». Онлайн-сервис
 
 **_Ссылка на [проект](http://foodgram-study.ddns.net "Гиперссылка к проекту.")_**
 
-**_Ссылка на [админ-зону](http://foodgram-study.ddns.net/admin "Гиперссылка к админке.")_**
-```
-username: admin
-password: admin
-```
 **_Ссылка на документацию к [API](http://foodgram-study.ddns.net/api/docs/ "Гиперссылка к API.") с актуальными адресами. Здесь описана структура возможных запросы и ожидаемых ответов_**
 
 ### _Развернуть проект на удаленном сервере:_
@@ -76,7 +71,7 @@ SECRET_KEY              - ваш секретный ключ
     docker push username/foodgram_gateway
     ```
 
-**_Запустить контейнеры Docker:**_
+**_Запустить контейнеры Docker:_**
 ```
 sudo docker compose -f docker-compose.production.yml up -d
 ```
@@ -137,6 +132,8 @@ DATABASES = {
 **_Создать и запустить контейнеры Docker, как указано выше._**
 
 **_После запуска проект будут доступен по адресу: http://localhost/_**
+
+**_Админка проекта будет доступна по адресу: http://localhost/admin/_**
 
 **_Документация будет доступна по адресу: http://localhost/api/docs/_**
 
