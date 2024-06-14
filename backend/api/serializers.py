@@ -358,19 +358,19 @@ class FollowSerializer(serializers.ModelSerializer):
             ),
         )
 
-    def validate_following(self, data):
+    def validate_following(self, value):
         '''Проверка подписки на самого себя и повторной подписки.'''
         user = self.context['request'].user
-        following = data.get('following')
+        following = value
         if user == following:
             raise exceptions.ValidationError(['Нельзя подписаться на себя.'])
         if Follow.objects.filter(
-                following=data.get('following'),
+                following=value,
                 user=self.context['request'].user).exists():
             raise serializers.ValidationError(
                 'Вы уже подписаны на этого пользователя!'
             )
-        return data
+        return value
 
     def to_representation(self, instance):
         '''Определяет сериализатор, используемый для чтения.'''

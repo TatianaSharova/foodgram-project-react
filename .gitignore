@@ -132,4 +132,3 @@ dmypy.json
 .idea
 
 #docker compose local
-docker-compose.yml

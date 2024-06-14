@@ -129,13 +129,27 @@ DATABASES = {
 
 ```
 
-**_Создать и запустить контейнеры Docker, как указано выше._**
+**_Запустить контейнеры Docker из папки с docker-compose.yml:._**
 
-**_После запуска проект будут доступен по адресу: http://localhost/_**
+```
+docker compose up
+```
+```
+docker compose exec backend python manage.py migrate
+```
+```
+docker compose exec backend python manage.py createsuperuser
+```
+```
+docker compose exec backend python manage.py load_data_ingredients
+```
 
-**_Админка проекта будет доступна по адресу: http://localhost/admin/_**
 
-**_Документация будет доступна по адресу: http://localhost/api/docs/_**
+**_После запуска проект будут доступен по адресу: http://localhost:8888/_**
+
+**_Админка проекта будет доступна по адресу: http://localhost:8888/admin/_**
+
+**_Документация будет доступна по адресу: http://localhost:8888/api/docs/_**
 
 
 ### Автор
